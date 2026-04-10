@@ -1,0 +1,133 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+typedef struct Data {
+    unsigned char dia;
+    unsigned char mes;
+    unsigned short int ano;
+} Data; 
+
+typedef struct reserva {
+    int codigo;
+    char cliente[51];
+    char destino[31];
+    Data dataViagem;
+    char status;
+} Reserva; 
+int main() {
+    // Declarar todas as variaveis no inicio 
+    Reserva a[10];
+    int i, j, cont = 0;
+    char resposta;
+    int pagasEncontradas = 0;
+
+    printf("Deseja fazer uma reserva? (s/n): ");
+    scanf(" %c", &resposta);
+
+    // Loop de cadastro 
+    while ((resposta == 's' || resposta == 'S') && cont < 10) {
+        printf("\n--- Reserva %d ---", cont + 1);
+        
+        printf("\nDigite o codigo da reserva: ");
+        scanf("%i", &a[cont].codigo);
+
+        printf("Digite o nome do cliente: ");
+        scanf(" %[^\n]", a[cont].cliente); 
+
+        printf("Digite o destino da viagem: ");
+        scanf(" %[^\n]", a[cont].destino); 
+        
+        printf("Digite a data (dd/mm/aaaa): ");
+        scanf("%hhu/%hhu/%hu", &a[cont].dataViagem.dia, &a[cont].dataViagem.mes, &a[cont].dataViagem.ano);
+        
+        printf("Digite status de pagamento (P/N): ");
+        scanf(" %c", &a[cont].status);
+
+        cont++;
+
+        if (cont < 10) {
+            printf("\nDeseja fazer outra reserva? (s/n): ");
+            scanf(" %c", &resposta);
+        }
+    }
+
+    // EXIBICAO EM TABELA
+    if (cont > 0) {
+        printf("\n%-4s | %-15s | %-15s | %-10s | %s", "COD", "CLIENTE", "DESTINO", "DATA", "ST"); // o '%' Inicia a especificação de formato, o '-' (sinal de subtracao) Alinha o texto a esquerda.
+        for (i = 0; i < cont; i++) {                                                             // o numero em seguida do sinal de menos define a largura minima da coluna.
+            printf("\n%-4d | %-15.15s | %-15.15s | %02hhu/%02hhu/%-4hu | %c",                   // o 's' indica que o valor a ser exibido é uma string de texto. %-4d: Imprime um número inteiro (d). O -4 garante que ele ocupe 4 espaços e seja alinhado à esquerda.
+                   a[i].codigo,                                                                // %-15.15s o primeiro 15 define o tamanho da coluna e o .15 define a precisao para nao estourar a medida e as colunas desalinharem.
+                   a[i].cliente, 
+                   a[i].destino, 
+                   a[i].dataViagem.dia, 
+                   a[i].dataViagem.mes, 
+                   a[i].dataViagem.ano, 
+                   toupper(a[i].status));
+        }
+    }
+	// EXIBIÇÃO DE RESERVAS PAGAS
+    printf("\n\n Reservas Pagas :");
+        for (i = 0; i < cont; i++) {
+            if (toupper(a[i].status) == 'P') {
+                printf("\n% -4d - %-15s - %-15s - %02hhu/%02hhu/%4hu",
+                       a[i].codigo, a[i].cliente, a[i].destino,
+                       a[i].dataViagem.dia, a[i].dataViagem.mes, a[i].dataViagem.ano);
+                pagasEncontradas++;
+            }
+        }
+
+        if (pagasEncontradas == 0) {
+            printf("\nNenhuma Reserva foi Paga!");
+        }
+    
+    // FILTRAR POR MÊS/ANO
+        unsigned char m;
+        unsigned short int y;
+        printf("\n\nFiltrar por mes/ano (mm aaaa): ");
+        scanf("%hhu %hu", &m, &y);
+        printf("\nReservas para %02hhu/%hu:", m, y);
+        for (i = 0; i < cont; i++) {
+            if (a[i].dataViagem.mes == m && a[i].dataViagem.ano == y) {
+                printf("\n%d - %s - %s", a[i].codigo, a[i].cliente, 
+                       (toupper(a[i].status) == 'P') ? "Pago" : "Nao Pago");
+            }
+        }
+        
+    // RESUMO POR DESTINO
+    printf("\n\nResumo por destino:");
+	int jaContado[10] = {0};
+
+	for (i = 0; i < cont; i++) {
+    	if (!jaContado[i]) {
+        	int qte = 1;
+        	jaContado[i] = 1;
+
+        // Criamos uma versão "limpa" e em maiúsculas do destino atual
+        char d1[31];
+        for(int k = 0; a[i].destino[k]; k++) d1[k] = toupper(a[i].destino[k]);
+        d1[strlen(a[i].destino)] = '\0';
+
+        for (j = i + 1; j < cont; j++) {
+            // Criamos uma versão em maiúsculas do destino comparado
+            char d2[31];
+            for(int k = 0; a[j].destino[k]; k++) d2[k] = toupper(a[j].destino[k]);
+            d2[strlen(a[j].destino)] = '\0';
+
+            // Compara as versões padronizadas
+            if (strcmp(d1, d2) == 0) {
+                qte++;
+                jaContado[j] = 1;
+            }
+        }
+        printf("\n%s: %d", d1, qte); 
+    }
+}
+      return 0;  
+    }
+    
+
+        
+    
+
+    
