@@ -1,0 +1,117 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+//Feito por: Rayra & Ruan.
+
+int ContWords(char texto[]);
+int StartMaius(char texto[]);
+int EncMaior(char texto[], char maior[]);
+int ContOcorre(char texto[]);
+
+int main()
+{
+    char texto[201];
+    char maior[50];
+    int contWord, contMaius, contOcorre;
+
+    printf("Digite uma frase: ");
+    fgets(texto, sizeof(texto), stdin);
+
+    contWord = ContWords(texto);
+    printf("Quantidade de palavras: %d", contWord);
+    contMaius = StartMaius(texto);
+    printf("\nQuantidade de palavras que iniciam com letra maiuscula: %d", contMaius);
+    EncMaior(texto, maior);
+    printf("\nMaior palavra: %s", maior);
+    contOcorre = ContOcorre(texto);
+    printf("\nQuantidade de vezes que 'ao' aparece: %d", contOcorre);
+
+    return 0;
+}
+
+//Contar palavras
+int ContWords(char texto[])
+{
+    //O "(char texto[])" significa que recebe uma string (array de caracteres) para analisar.
+    //N�o poderia ser "(int)" pois a fun��o receberia apenas um n�mero inteiro nesse caso.
+    int i, palavras = 0;
+
+    for (i = 0; texto[i] != '\0'; i++)
+    {
+        if (texto[i] != ' ' && (i == 0 || texto[i - 1] == ' '))
+        {
+            //O if verifica se antes e depois da palavra vem espa�o. Assim ele sabe que � uma palavra e n�o um caracter �nico.
+            palavras++;
+        }
+    }
+
+    return palavras;
+}
+
+//Palavras iniciadas com mai�scula
+int StartMaius(char texto[])
+{
+    int a, letras = 0;
+
+    for (a = 0; texto[a] != '\0'; a++)
+    {
+        // Verifica se � letra mai�scula E in�cio de palavra
+        if (isupper(texto[a]) && (a == 0 || texto[a - 1] == ' '))
+        {
+            letras++;
+        }
+    }
+    return letras;
+}
+
+//Encontra maior palavra
+int EncMaior(char texto[], char maior[])
+{
+    int b, Maior = 0;
+
+    for (b = 0; texto[b] != '\0'; b++)
+    {
+        if (texto[b] != ' ' && (b == 0 || texto[b - 1] == ' '))
+        {
+            int inicio = b;
+            //O inicio guarda o caracter onde a palavra começou, dessa forma podemos subtrair o inicio pelo final para obter o tamanho da palavra.
+            //Já que o final da palavra ficara salva em "b" quando o while terminar.
+            while (texto[b] != ' ' && texto[b] != '\0')
+            {
+                b++;
+            }
+            int tamanho = b - inicio;
+            if (tamanho > Maior)
+            {
+                Maior = tamanho;
+                //Se o tamanho da palavra atual for maior que o maior encontrado at� agora, atualiza o valor de "Maior" para o tamanho da palavra atual.
+
+                int c;
+                for (c = 0; c < tamanho; c++)
+                {
+                    maior[c] = texto[inicio + c];
+                    //Copia os caracteres da palavra atual para a string "maior" criada no main.
+                }
+
+                maior[tamanho] = '\0'; 
+                //O "\0" finaliza a string
+            }
+        }
+    }
+}
+
+//Encontra quantas vezes "ao" aparece
+int ContOcorre(char texto[])
+{
+    int d, ocorrencias = 0;
+
+    for (d = 0; texto[d] != '\0'; d++)
+    {
+        if (tolower(texto[d]) == 'a' && tolower(texto[d + 1]) == 'o')
+        {
+            ocorrencias++;
+        }
+    }
+    return ocorrencias;
+}
