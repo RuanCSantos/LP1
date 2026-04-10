@@ -1,0 +1,87 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+void OrdemAlfabetica(char nomes[30][30], char ordemAlfabetica[30][30], int qtdeNomes);
+void OrdemTamanho(char nomes[30][30], char ordemTamanho[30][30], int qtdeNomes);
+
+int main()
+{
+    char nomes[30][30];
+    char ordemAlfabetica[30][30];
+    char ordemTamanho[30][30];
+    int qtdeNomes, i;
+
+    printf("Digite a quantidade de nomes: ");
+    scanf("%d", &qtdeNomes);
+
+    for (i = 0; i < qtdeNomes; i++)
+    {
+        printf("Nome %d: ", i + 1);
+        scanf("%s", nomes[i]);
+    }
+
+    OrdemAlfabetica(nomes, ordemAlfabetica, qtdeNomes);
+    printf("\nNomes em ordem alfabetica:\n");
+    for (i = 0; i < qtdeNomes; i++)
+    {
+        printf("%s\n", ordemAlfabetica[i]);
+    }
+
+//Ordem por tamanho
+    char tamanho[30];
+    int b, c;
+
+    //Copia os nomes para a matriz de ordem por tamanho
+    for (c = 0; c < qtdeNomes; c++)
+    {
+        strcpy(ordemTamanho[c], ordemAlfabetica[c]);
+    }
+    for (c = 0; c < qtdeNomes - 1; c++)
+    {
+        for (b = 0; b < qtdeNomes - c - 1; b++)
+        {
+            //Compara o comprimento das strings usando strlen
+            //Se o nome atual for maior que o próximo nome, eles trocam de lugar
+            if (strlen(ordemTamanho[b]) > strlen(ordemTamanho[b + 1]))
+            {
+                strcpy(tamanho, ordemTamanho[b]);
+                strcpy(ordemTamanho[b], ordemTamanho[b + 1]);
+                strcpy(ordemTamanho[b + 1], tamanho);
+            }
+        }
+    }
+    printf("\nNomes em ordem por tamanho:\n");
+            for (i = 0; i < qtdeNomes; i++)
+            {
+                printf("%s\n", ordemTamanho[i]);
+            }
+}
+
+//Ordem alfabética
+void OrdemAlfabetica(char nomes[30][30], char ordemAlfabetica[30][30], int qtdeNomes)
+{
+    int a, j;
+    char temp[30];
+
+    //Copia os nomes para a matriz de ordem alfabética
+    for (a = 0; a < qtdeNomes; a++)
+    {
+        strcpy(ordemAlfabetica[a], nomes[a]);
+    }
+
+    //Ordena os nomes em ordem alfabética usando o método de bolha
+    for (a = 0; a < qtdeNomes - 1; a++)
+    {
+        for (j = 0; j < qtdeNomes - a - 1; j++)
+        {
+            if (strcmp(ordemAlfabetica[j], ordemAlfabetica[j + 1]) > 0)
+            {
+                //Troca os nomes
+                strcpy(temp, ordemAlfabetica[j]);
+                strcpy(ordemAlfabetica[j], ordemAlfabetica[j + 1]);
+                strcpy(ordemAlfabetica[j + 1], temp);
+            }
+        }
+    }
+}
