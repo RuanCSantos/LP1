@@ -2,8 +2,6 @@
 #include <string.h>
 #include <ctype.h>
 
-//Feito por: Rayra & Ruan.
-
 int ContWords(char texto[]);
 int StartMaius(char texto[]);
 int EncMaior(char texto[], char maior[]);
